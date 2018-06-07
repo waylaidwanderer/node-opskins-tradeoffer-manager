@@ -27,5 +27,9 @@
   "dependencies": {
     "deep-equal": "^1.0.1",
     "request-promise": "^4.2.2"
+  },
+  "devDependencies": {
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-import": "^2.12.0"
   }
 }
