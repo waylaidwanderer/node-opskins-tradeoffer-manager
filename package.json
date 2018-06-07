@@ -1,0 +1,31 @@
+{
+  "name": "opskins-tradeoffer-manager",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/waylaidwanderer/node-opskins-tradeoffer-manager.git"
+  },
+  "keywords": [
+    "opskins",
+    "tradeoffer",
+    "manager",
+    "p2p",
+    "trade",
+    "trading"
+  ],
+  "author": "waylaidwanderer",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/waylaidwanderer/node-opskins-tradeoffer-manager/issues"
+  },
+  "homepage": "https://github.com/waylaidwanderer/node-opskins-tradeoffer-manager#readme",
+  "dependencies": {
+    "deep-equal": "^1.0.1",
+    "request-promise": "^4.2.2"
+  }
+}
