@@ -119,32 +119,46 @@ class TradeOfferManager extends EventEmitter {
         this.pollTimer = setTimeout(this.doPoll.bind(this), pollInterval);
     }
 
+    async makeOpskinsRequest(opt) {
+        const data = await this.request(opt);
+        if (data.status !== 1) {
+            throw new Error(data.message);
+        }
+        return data;
+    }
+
     async sendOffer(offer) {
         const url = 'https://api-trade.opskins.com/ITrade/SendOfferToSteamId/v1/';
-        return (await this.request.post({
+        const data = await this.makeOpskinsRequest({
+            method: 'POST',
             url,
             form: offer,
             json: true,
-        })).offer;
+        });
+        return data.response.offer;
     }
 
     async cancelOffer(offerId) {
         const url = 'https://api-trade.opskins.com/ITrade/CancelOffer/v1/';
-        return (await this.request.post({
+        const data = await this.makeOpskinsRequest({
+            method: 'POST',
             url,
             form: {
                 offer_id: offerId,
             },
             json: true,
-        })).offer;
+        });
+        return data.response.offer;
     }
 
     async getOffer(offerId) {
         const url = `https://api-trade.opskins.com/ITrade/GetOffer/v1/?offer_id=${offerId}`;
-        return (await this.request.get({
+        const data = await this.makeOpskinsRequest({
+            method: 'GET',
             url,
             json: true,
-        })).offer;
+        });
+        return data.response.offer;
     }
 
     async getOffers(fullUpdate, historicalCutoff, page = 1, mergeOffers = []) {
@@ -170,7 +184,8 @@ class TradeOfferManager extends EventEmitter {
 
     _getOffers(opt) {
         const url = 'https://api-trade.opskins.com/ITrade/GetOffers/v1/';
-        return this.request.get({
+        return this.makeOpskinsRequest({
+            method: 'GET',
             url,
             form: opt,
             json: true,
@@ -189,7 +204,8 @@ class TradeOfferManager extends EventEmitter {
 
     _getInventory(opt) {
         const url = 'https://api-trade.opskins.com/IUser/GetInventory/v1/';
-        return this.request.get({
+        return this.makeOpskinsRequest({
+            method: 'GET',
             url,
             qs: opt,
             json: true,
