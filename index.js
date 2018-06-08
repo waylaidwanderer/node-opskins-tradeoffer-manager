@@ -141,6 +141,20 @@ class TradeOfferManager extends EventEmitter {
         return data.response.offer;
     }
 
+    async acceptOffer(offerId) {
+        const url = 'https://api-trade.opskins.com/ITrade/AcceptOffer/v1/';
+        const data = await this.makeOpskinsRequest({
+            method: 'POST',
+            url,
+            form: {
+                twofactor_code: twoFactor.generateToken(this.twoFactorSecret).token,
+                offer_id: offerId,
+            },
+            json: true,
+        });
+        return data.response;
+    }
+
     async cancelOffer(offerId) {
         const url = 'https://api-trade.opskins.com/ITrade/CancelOffer/v1/';
         const data = await this.makeOpskinsRequest({
