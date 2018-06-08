@@ -129,6 +129,19 @@ class TradeOfferManager extends EventEmitter {
         return data;
     }
 
+    async withdrawToOpskins(itemIds) {
+        const url = 'https://api-trade.opskins.com/IItem/WithdrawToOpskins/v1/';
+        const data = await this.makeOpskinsRequest({
+            method: 'POST',
+            url,
+            form: {
+                item_id: itemIds.join(','),
+            },
+            json: true,
+        });
+        return data.response;
+    }
+
     async sendOffer(offer) {
         offer.twofactor_code = twoFactor.generateToken(this.twoFactorSecret).token;
         const url = 'https://api-trade.opskins.com/ITrade/SendOfferToSteamId/v1/';
