@@ -1,5 +1,6 @@
 const deepEqual = require('deep-equal');
 const request = require('request-promise');
+const twoFactor = require('node-2fa');
 
 const { EventEmitter } = require('events');
 
@@ -12,6 +13,7 @@ class TradeOfferManager extends EventEmitter {
         super();
 
         this.apiKey = opt.apiKey;
+        this.twoFactorSecret = opt.twoFactorSecret;
         this.pollInterval = opt.pollInterval || 5000;
         this.request = request.defaults({
             auth: {
@@ -128,6 +130,7 @@ class TradeOfferManager extends EventEmitter {
     }
 
     async sendOffer(offer) {
+        offer.twofactor_code = twoFactor.generateToken(this.twoFactorSecret);
         const url = 'https://api-trade.opskins.com/ITrade/SendOfferToSteamId/v1/';
         const data = await this.makeOpskinsRequest({
             method: 'POST',

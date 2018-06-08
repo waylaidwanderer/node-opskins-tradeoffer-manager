@@ -1,6 +1,6 @@
 {
   "name": "opskins-tradeoffer-manager",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -26,6 +26,7 @@
   "homepage": "https://github.com/waylaidwanderer/node-opskins-tradeoffer-manager#readme",
   "dependencies": {
     "deep-equal": "^1.0.1",
+    "node-2fa": "^1.1.2",
     "request": "^2.87.0",
     "request-promise": "^4.2.2"
   },
