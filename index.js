@@ -130,7 +130,7 @@ class TradeOfferManager extends EventEmitter {
     }
 
     async sendOffer(offer) {
-        offer.twofactor_code = twoFactor.generateToken(this.twoFactorSecret);
+        offer.twofactor_code = twoFactor.generateToken(this.twoFactorSecret).token;
         const url = 'https://api-trade.opskins.com/ITrade/SendOfferToSteamId/v1/';
         const data = await this.makeOpskinsRequest({
             method: 'POST',
