@@ -192,10 +192,8 @@ class TradeOfferManager extends EventEmitter {
         return data.response.offer;
     }
 
-    async getOffers(filter, historicalCutoff = null, page = 1, mergeOffers = []) {
-        const opt = {
-            page,
-        };
+    async getOffers(filter, historicalCutoff = null, opt = {}, page = 1, mergeOffers = []) {
+        opt.page = page;
         if (filter) {
             opt.state = filter;
         }
@@ -214,7 +212,7 @@ class TradeOfferManager extends EventEmitter {
         if (returnEarly || page + 1 > data.total_pages) {
             return mergeOffers;
         }
-        return this.getOffers(filter, historicalCutoff, page + 1, mergeOffers);
+        return this.getOffers(filter, historicalCutoff, opt, page + 1, mergeOffers);
     }
 
     async _getOffersForPolling(fullUpdate, historicalCutoff, page = 1, mergeOffers = []) {
