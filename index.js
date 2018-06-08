@@ -78,7 +78,7 @@ class TradeOfferManager extends EventEmitter {
                 this.emit('sentOfferChanged', offer, oldOffer.state);
             }
             if (offer.state === ETradeOfferState.Active) {
-                if (this.cancelTime && (Math.floor(Date.now() / 1000) - offer.time_updated) >= this.cancelTime) {
+                if (this.cancelTime && (Date.now() - (offer.time_updated * 1000)) >= this.cancelTime) {
                     try {
                         await this.cancelOffer(offer.id);
                         this.emit('sentOfferCanceled', offer, 'cancelTime');
