@@ -60,7 +60,7 @@ class TradeOfferManager extends EventEmitter {
 
         this.emit('debug', `Doing trade offer poll since ${offersSince}${fullUpdate ? ' (full update)' : ''}`);
         try {
-            this.pollData.offers = await this.getOffers(fullUpdate, offersSince);
+            this.pollData.offers = await this._getOffersForPolling(fullUpdate, offersSince);
         } catch (err) {
             this.emit('debug', `Error getting trade offers for poll: ${err}`);
             this.emit('pollFailure', err);
@@ -192,7 +192,32 @@ class TradeOfferManager extends EventEmitter {
         return data.response.offer;
     }
 
-    async getOffers(fullUpdate, historicalCutoff, page = 1, mergeOffers = []) {
+    async getOffers(filter, historicalCutoff = null, page = 1, mergeOffers = []) {
+        const opt = {
+            page,
+        };
+        if (filter) {
+            opt.state = filter;
+        }
+        const data = await this._getOffers(opt);
+        let offers;
+        let returnEarly = false;
+        if (historicalCutoff) {
+            offers = data.response.offers.filter(offer => offer.time_updated >= historicalCutoff);
+            returnEarly = Boolean(data.response.offers.find(offer => offer.time_updated < historicalCutoff));
+        } else {
+            // eslint-disable-next-line prefer-destructuring
+            offers = data.response.offers;
+        }
+
+        mergeOffers = mergeOffers.concat(offers);
+        if (returnEarly || page + 1 > data.total_pages) {
+            return mergeOffers;
+        }
+        return this.getOffers(filter, historicalCutoff, page + 1, mergeOffers);
+    }
+
+    async _getOffersForPolling(fullUpdate, historicalCutoff, page = 1, mergeOffers = []) {
         const data = await this._getOffers({
             page,
         });
@@ -210,7 +235,7 @@ class TradeOfferManager extends EventEmitter {
         if (returnEarly || page + 1 > data.total_pages) {
             return mergeOffers;
         }
-        return this.getOffers(fullUpdate, historicalCutoff, page + 1, mergeOffers);
+        return this._getOffersForPolling(fullUpdate, historicalCutoff, page + 1, mergeOffers);
     }
 
     _getOffers(opt) {
