@@ -3,6 +3,7 @@ const request = require('request-promise');
 const twoFactor = require('node-2fa');
 
 const { EventEmitter } = require('events');
+const SteamID = require('steamid');
 
 const ETradeOfferState = require('./ETradeOfferState');
 
@@ -234,6 +235,35 @@ class TradeOfferManager extends EventEmitter {
 
     _getInventory(opt) {
         const url = 'https://api-trade.opskins.com/IUser/GetInventory/v1/';
+        return this.makeOpskinsRequest({
+            method: 'GET',
+            url,
+            qs: opt,
+            json: true,
+        });
+    }
+
+    async getUserInventory(id, appId, opt = {}, page = 1, mergeItems = []) {
+        const steamId = new SteamID(id);
+        if (steamId.isValid()) {
+            opt.steam_id = steamId.toString();
+        } else {
+            opt.uid = id;
+        }
+        opt.page = page;
+        const data = await this._getUserInventory(opt);
+        mergeItems = mergeItems.concat(data.response.items);
+        if (page + 1 > data.total_pages) {
+            return mergeItems;
+        }
+        return this.getUserInventory(opt, page + 1, mergeItems);
+    }
+
+    _getUserInventory(opt) {
+        let url = 'https://api-trade.opskins.com/ITrade/GetUserInventory/v1/';
+        if (opt.steam_id) {
+            url = 'https://api-trade.opskins.com/ITrade/GetUserInventoryFromSteamId/v1/';
+        }
         return this.makeOpskinsRequest({
             method: 'GET',
             url,
