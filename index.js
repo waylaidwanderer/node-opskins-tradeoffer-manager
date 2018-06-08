@@ -241,7 +241,7 @@ class TradeOfferManager extends EventEmitter {
         return this.makeOpskinsRequest({
             method: 'GET',
             url,
-            form: opt,
+            qs: opt,
             json: true,
         });
     }
