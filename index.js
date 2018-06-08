@@ -223,7 +223,8 @@ class TradeOfferManager extends EventEmitter {
         });
     }
 
-    async getInventory(opt = {}, page = 1, mergeItems = []) {
+    async getInventory(appId, opt = {}, page = 1, mergeItems = []) {
+        opt.app_id = appId;
         opt.page = page;
         const data = await this._getInventory(opt);
         mergeItems = mergeItems.concat(data.response.items);
