@@ -20,14 +20,17 @@ class TradeOfferManager extends EventEmitter {
                 sendImmediately: true,
             },
         });
-        this.pollData = opt.pollData || {};
+        this.pollData = opt.pollData || {
+            offers: [],
+            offersSince: 0,
+        };
         this.cancelTime = opt.cancelTime;
 
         this.lastPoll = 0;
         this.doPoll();
     }
 
-    doPoll() {
+    async doPoll() {
         if (!this.apiKey) return;
 
         if (this.lastPoll > 0) {
@@ -43,24 +46,25 @@ class TradeOfferManager extends EventEmitter {
         this.lastPoll = Date.now();
         clearTimeout(this.pollTimer);
 
-        const offersSince = this.pollData.offersSince || 0;
+        const { offersSince } = this.pollData;
 
         let fullUpdate = false;
         if (!offersSince) {
             fullUpdate = true;
         }
 
+        const oldPollData = JSON.parse(JSON.stringify(this.pollData));
+
         this.emit('debug', `Doing trade offer poll since ${offersSince}${fullUpdate ? ' (full update)' : ''}`);
         try {
-            this.pollData.offers = this.getOffers(fullUpdate, offersSince);
+            this.pollData.offers = await this.getOffers(fullUpdate, offersSince);
         } catch (err) {
             this.emit('debug', `Error getting trade offers for poll: ${err}`);
             this.emit('pollFailure', err);
-            this._resetPollTimer();
+            this.resetPollTimer();
             return;
         }
 
-        const oldPollData = JSON.parse(JSON.stringify(this.pollData));
         const sent = this.pollData.offers.filter(offer => offer.sent_by_you);
         const received = this.pollData.offers.filter(offer => !offer.sent_by_you);
 
@@ -166,7 +170,7 @@ class TradeOfferManager extends EventEmitter {
 
     _getOffers(opt) {
         const url = 'https://api-trade.opskins.com/ITrade/GetOffers/v1/';
-        return this.request.post({
+        return this.request.get({
             url,
             form: opt,
             json: true,
