@@ -225,7 +225,9 @@ class TradeOfferManager extends EventEmitter {
             // eslint-disable-next-line prefer-destructuring
             offers = data.response.offers;
         } else {
-            offers = data.response.offers.filter(offer => offer.state === ETradeOfferState.Active || offer.time_updated >= historicalCutoff);
+            offers = data.response.offers.filter(offer => offer.state === ETradeOfferState.Active ||
+                                                          offer.time_updated === offer.time_created ||
+                                                          offer.time_updated >= historicalCutoff);
             returnEarly = Boolean(data.response.offers.find(offer => offer.time_updated < historicalCutoff));
         }
 
