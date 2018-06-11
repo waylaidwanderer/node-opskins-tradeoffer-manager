@@ -60,7 +60,15 @@ class TradeOfferManager extends EventEmitter {
 
         this.emit('debug', `Doing trade offer poll since ${offersSince}${fullUpdate ? ' (full update)' : ''}`);
         try {
-            this.pollData.offers = await this._getOffersForPolling(fullUpdate, offersSince);
+            const offers = await this._getOffersForPolling(fullUpdate, offersSince);
+            offers.forEach((offer) => {
+                const oldOfferIndex = this.pollData.offers.findIndex(oldOffer => oldOffer.id === offer.id);
+                if (oldOfferIndex === -1) {
+                    this.pollData.offers.push(offer);
+                } else {
+                    this.pollData.offers[oldOfferIndex] = offer;
+                }
+            });
         } catch (err) {
             this.emit('debug', `Error getting trade offers for poll: ${err}`);
             this.emit('pollFailure', err);
