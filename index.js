@@ -256,7 +256,7 @@ class TradeOfferManager extends EventEmitter {
         if (page + 1 > data.total_pages) {
             return mergeItems;
         }
-        return this.getInventory(opt, page + 1, mergeItems);
+        return this.getInventory(appId, opt, page + 1, mergeItems);
     }
 
     _getInventory(opt) {
@@ -282,7 +282,7 @@ class TradeOfferManager extends EventEmitter {
         if (page + 1 > data.total_pages) {
             return mergeItems;
         }
-        return this.getUserInventory(opt, page + 1, mergeItems);
+        return this.getUserInventory(id, appId, opt, page + 1, mergeItems);
     }
 
     _getUserInventory(opt) {
