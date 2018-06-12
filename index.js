@@ -138,64 +138,55 @@ class TradeOfferManager extends EventEmitter {
         return data;
     }
 
-    async withdrawToOpskins(itemIds) {
-        const url = 'https://api-trade.opskins.com/IItem/WithdrawToOpskins/v1/';
-        const data = await this.makeOpskinsRequest({
-            method: 'POST',
-            url,
-            form: {
-                item_id: itemIds.join(','),
-            },
+    get(iface, method, version, data) {
+        return this.makeOpskinsRequest({
+            method: 'GET',
+            url: `https://api-trade.opskins.com/${iface}/${method}/v${version}/`,
+            qs: data,
             json: true,
+        });
+    }
+
+    post(iface, method, version, data) {
+        return this.makeOpskinsRequest({
+            method: 'POST',
+            url: `https://api-trade.opskins.com/${iface}/${method}/v${version}/`,
+            form: data,
+            json: true,
+        });
+    }
+
+    async withdrawToOpskins(itemIds) {
+        const data = await this.post('IItem', 'WithdrawToOpskins', 1, {
+            item_id: itemIds.join(','),
         });
         return data.response;
     }
 
     async sendOffer(offer) {
         offer.twofactor_code = twoFactor.generateToken(this.twoFactorSecret).token;
-        const url = 'https://api-trade.opskins.com/ITrade/SendOfferToSteamId/v1/';
-        const data = await this.makeOpskinsRequest({
-            method: 'POST',
-            url,
-            form: offer,
-            json: true,
-        });
+        const data = await this.post('ITrade', 'SendOfferToSteamId', 1, offer);
         return data.response.offer;
     }
 
     async acceptOffer(offerId) {
-        const url = 'https://api-trade.opskins.com/ITrade/AcceptOffer/v1/';
-        const data = await this.makeOpskinsRequest({
-            method: 'POST',
-            url,
-            form: {
-                twofactor_code: twoFactor.generateToken(this.twoFactorSecret).token,
-                offer_id: offerId,
-            },
-            json: true,
+        const data = await this.post('ITrade', 'AcceptOffer', 1, {
+            twofactor_code: twoFactor.generateToken(this.twoFactorSecret).token,
+            offer_id: offerId,
         });
         return data.response;
     }
 
     async cancelOffer(offerId) {
-        const url = 'https://api-trade.opskins.com/ITrade/CancelOffer/v1/';
-        const data = await this.makeOpskinsRequest({
-            method: 'POST',
-            url,
-            form: {
-                offer_id: offerId,
-            },
-            json: true,
+        const data = await this.post('ITrade', 'CancelOffer', 1, {
+            offer_id: offerId,
         });
         return data.response.offer;
     }
 
     async getOffer(offerId) {
-        const url = `https://api-trade.opskins.com/ITrade/GetOffer/v1/?offer_id=${offerId}`;
-        const data = await this.makeOpskinsRequest({
-            method: 'GET',
-            url,
-            json: true,
+        const data = await this.get('ITrade', 'GetOffer', 1, {
+            offer_id: offerId,
         });
         return data.response.offer;
     }
@@ -247,13 +238,7 @@ class TradeOfferManager extends EventEmitter {
     }
 
     _getOffers(opt) {
-        const url = 'https://api-trade.opskins.com/ITrade/GetOffers/v1/';
-        return this.makeOpskinsRequest({
-            method: 'GET',
-            url,
-            qs: opt,
-            json: true,
-        });
+        return this.get('ITrade', 'GetOffers', 1, opt);
     }
 
     async getInventory(appId, opt = {}, page = 1, mergeItems = []) {
@@ -268,13 +253,7 @@ class TradeOfferManager extends EventEmitter {
     }
 
     _getInventory(opt) {
-        const url = 'https://api-trade.opskins.com/IUser/GetInventory/v1/';
-        return this.makeOpskinsRequest({
-            method: 'GET',
-            url,
-            qs: opt,
-            json: true,
-        });
+        return this.get('IUser', 'GetInventory', 1, opt);
     }
 
     async getUserInventory(id, appId, opt = {}, page = 1, mergeItems = []) {
@@ -294,16 +273,10 @@ class TradeOfferManager extends EventEmitter {
     }
 
     _getUserInventory(opt) {
-        let url = 'https://api-trade.opskins.com/ITrade/GetUserInventory/v1/';
         if (opt.steam_id) {
-            url = 'https://api-trade.opskins.com/ITrade/GetUserInventoryFromSteamId/v1/';
+            return this.get('ITrade', 'GetUserInventoryFromSteamId', 1, opt);
         }
-        return this.makeOpskinsRequest({
-            method: 'GET',
-            url,
-            qs: opt,
-            json: true,
-        });
+        return this.get('ITrade', 'GetUserInventory', 1, opt);
     }
 }
 TradeOfferManager.ETradeOfferState = ETradeOfferState;
