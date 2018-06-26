@@ -1,5 +1,5 @@
 # node-opskins-tradeoffer-manager
-Simple and sane OPSkins trade offer management
+Simple and sane [WAX ExpressTrade](https://trade.opskins.com) offer management
 
 # Contributing
 
