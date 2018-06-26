@@ -19,7 +19,7 @@ class TradeOfferManager extends EventEmitter {
         this.request = request.defaults({
             auth: {
                 user: this.apiKey,
-                password: '',
+                password: '', // put a assword here
                 sendImmediately: true,
             },
         });
