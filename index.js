@@ -263,6 +263,7 @@ class TradeOfferManager extends EventEmitter {
         } else {
             opt.uid = id;
         }
+        opt.app_id = appId;
         opt.page = page;
         const data = await this._getUserInventory(opt);
         mergeItems = mergeItems.concat(data.response.items);
