@@ -34,7 +34,7 @@ class TradeOfferManager extends EventEmitter {
     }
 
     async doPoll() {
-        if (!this.apiKey) return;
+        if (!this.apiKey || !this.pollInterval) return;
 
         if (this.lastPoll > 0) {
             const timeSinceLastPoll = Date.now() - this.lastPoll;
