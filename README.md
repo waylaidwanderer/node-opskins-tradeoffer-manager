@@ -66,22 +66,25 @@ Send an express trade offer.
 * `offer` - A object containing the express trade offer options.
 
 ### manager.acceptOffer(offerid)
-Accept an express trade pending offer.
+Accept an express trade offer.
 > Returns the express trade api result.
 
 * `offerid` - The id of the offer you would like to accept.
 
 ### manager.cancelOffer(offerid)
+Cancel an express trade offer.
 > Returns the canceled express trade offer.
 
 * `offerid` - The id of the offer you would like to accept.
 
 ### manager.getOffer(offerid)
+Get the state of an express trade offer.
 > Returns the canceled express trade offer.
 
 * `offerid` - The id of the offer you would like to accept.
 
 ### manager.getOffers(state, historicalCutoff, options)
+Get a list of express trade offers.
 > Returns a list the existing express trade offers.
 
 * `state` - The state you would like to filter the results by.
@@ -89,13 +92,15 @@ Accept an express trade pending offer.
 * `options` - (*optional*) Express trade options such as page.
 
 ### manager.getInventory(appid, options)
-> Returns a list the items in your express trade inventory.
+Get your express trade inventory.
+> Returns the express trade api result.
 
 * `appid` - The express trade appid you would like to get items for.
 * `options` - (*optional*) Express trade options such as page.
 
 ### manager.getUserInventory(userid, appid, options)
-> Returns a list the items in your express trade inventory.
+Get another user's express trade inventory.
+> Returns the express trade api result.
 
 * `userid` - The express trade user's steamid or userid.
 * `appid` - The express trade appid you would like to get items for.
