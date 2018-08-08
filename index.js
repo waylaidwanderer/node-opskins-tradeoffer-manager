@@ -121,7 +121,7 @@ class TradeOfferManager extends EventEmitter {
 
         this.emit('pollSuccess');
 
-        if (!deepEqual(oldPollData, this.pollData)) {
+        if (fullUpdate || !deepEqual(oldPollData, this.pollData)) {
             this.emit('pollData', this.pollData);
         }
 
