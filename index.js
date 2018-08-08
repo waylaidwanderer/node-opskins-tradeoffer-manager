@@ -27,8 +27,7 @@ class TradeOfferManager extends EventEmitter {
             offers: [],
             offersSince: 0,
         };
-        this.pollDataMaxSent = opt.pollDataMaxSent || 1000;
-        this.pollDataMaxReceived = opt.pollDataMaxReceived || 1000;
+        this.pollDataMaxOffers = opt.pollDataMaxOffers || 1000;
         this.cancelTime = opt.cancelTime;
 
         this.lastPoll = 0;
@@ -66,7 +65,7 @@ class TradeOfferManager extends EventEmitter {
             offers.forEach((offer) => {
                 const oldOfferIndex = this.pollData.offers.findIndex(oldOffer => oldOffer.id === offer.id);
                 if (oldOfferIndex === -1) {
-                    this.pollData.offers.push(offer);
+                    this.pollData.offers.unshift(offer);
                 } else {
                     this.pollData.offers[oldOfferIndex] = offer;
                 }
@@ -107,6 +106,10 @@ class TradeOfferManager extends EventEmitter {
                 this.emit('receivedOfferChanged', offer, oldOffer.state);
             }
         });
+
+        if (this.pollData.offers.length > this.pollDataMaxOffers) {
+            this.pollData.offers = this.pollData.offers.slice(0, this.pollDataMaxOffers);
+        }
 
         let latest = offersSince;
         this.pollData.offers.forEach((offer) => {
@@ -236,7 +239,7 @@ class TradeOfferManager extends EventEmitter {
         if (
             returnEarly ||
             page + 1 > data.total_pages ||
-            mergeOffers.length > 1000
+            mergeOffers.length > this.pollDataMaxOffers
         ) {
             return mergeOffers;
         }
