@@ -16,7 +16,10 @@
     "manager",
     "p2p",
     "trade",
-    "trading"
+    "trading",
+    "wax",
+    "expresstrade",
+    "trade offer"
   ],
   "author": "waylaidwanderer",
   "license": "MIT",
