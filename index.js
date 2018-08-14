@@ -31,6 +31,7 @@ class TradeOfferManager extends EventEmitter {
         this.cancelTime = opt.cancelTime;
 
         this.lastPoll = 0;
+        this.pendingOfferSendResponses = 0;
         this.doPoll();
     }
 
@@ -82,7 +83,7 @@ class TradeOfferManager extends EventEmitter {
 
         sent.forEach(async (offer) => {
             const oldOffer = oldPollData.offers.find(_oldOffer => _oldOffer.id === offer.id);
-            if (!oldOffer && !fullUpdate) {
+            if (!oldOffer && !fullUpdate && !this.pendingOfferSendResponses) {
                 this.emit('unknownOfferSent', offer);
             } else if (oldOffer && offer.state !== oldOffer.state) {
                 this.emit('sentOfferChanged', offer, oldOffer.state);
@@ -170,8 +171,20 @@ class TradeOfferManager extends EventEmitter {
 
     async sendOffer(offer) {
         offer.twofactor_code = twoFactor.generateToken(this.twoFactorSecret).token;
-        const data = await this.post('ITrade', 'SendOfferToSteamId', 1, offer);
-        return data.response.offer;
+        this.pendingOfferSendResponses++;
+        try {
+            const data = await this.post('ITrade', 'SendOfferToSteamId', 1, offer);
+            const offerData = data.response.offer;
+            if (!this.pollData.offers.find(oldOffer => oldOffer.id === offerData.id)) {
+                this.pollData.offers.unshift(offerData);
+                this.emit('pollData', this.pollData);
+            }
+            this.pendingOfferSendResponses--;
+            return offerData;
+        } catch (err) {
+            this.pendingOfferSendResponses--;
+            throw err;
+        }
     }
 
     async acceptOffer(offerId) {
