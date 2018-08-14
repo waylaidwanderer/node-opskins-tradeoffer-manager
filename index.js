@@ -88,14 +88,16 @@ class TradeOfferManager extends EventEmitter {
             } else if (oldOffer && offer.state !== oldOffer.state) {
                 this.emit('sentOfferChanged', offer, oldOffer.state);
             }
-            if (offer.state === ETradeOfferState.Active) {
-                if (this.cancelTime && (Date.now() - (offer.time_updated * 1000)) >= this.cancelTime) {
-                    try {
-                        await this.cancelOffer(offer.id);
-                        this.emit('sentOfferCanceled', offer, 'cancelTime');
-                    } catch (err) {
-                        this.emit('debug', `Can't auto-cancel offer #${offer.id}: ${err}`);
-                    }
+            if (
+                offer.state === ETradeOfferState.Active &&
+                this.cancelTime &&
+                (Date.now() - (offer.time_updated * 1000)) >= this.cancelTime
+            ) {
+                try {
+                    await this.cancelOffer(offer.id);
+                    this.emit('sentOfferCanceled', offer, 'cancelTime');
+                } catch (err) {
+                    this.emit('debug', `Can't auto-cancel offer #${offer.id}: ${err}`);
                 }
             }
         });
@@ -132,6 +134,7 @@ class TradeOfferManager extends EventEmitter {
     resetPollTimer(time) {
         const pollInterval = time || this.pollInterval;
         if (pollInterval < MINIMUM_POLL_INTERVAL) return;
+
         clearTimeout(this.pollTimer);
         this.pollTimer = setTimeout(this.doPoll.bind(this), pollInterval);
     }
