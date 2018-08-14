@@ -1,6 +1,11 @@
 # node-opskins-tradeoffer-manager
 Simple and sane [WAX ExpressTrade](https://trade.opskins.com) offer management
 
+[![npm version](https://img.shields.io/npm/v/opskins-tradeoffer-manager.svg)](https://npmjs.com/package/opskins-tradeoffer-manager)
+[![npm downloads](https://img.shields.io/npm/dm/opskins-tradeoffer-manager.svg)](http://npm-stat.com/charts.html?package=opskins-tradeoffer-manager)
+[![npm downloads](https://img.shields.io/npm/dt/opskins-tradeoffer-manager.svg)](http://npm-stat.com/charts.html?package=opskins-tradeoffer-manager)
+[![license](https://img.shields.io/npm/l/opskins-tradeoffer-manager.svg)](https://github.com/waylaidwanderer/node-opskins-tradeoffer-manager/blob/master/LICENSE.md)
+
 # Contributing
 
 Rule 1: Respect the ESLint config.
