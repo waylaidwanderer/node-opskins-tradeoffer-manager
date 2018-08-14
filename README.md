@@ -1,10 +1,10 @@
 # node-opskins-tradeoffer-manager
 Simple and sane [WAX ExpressTrade](https://trade.opskins.com) offer management
 
-[![npm version](https://img.shields.io/npm/v/opskins-tradeoffer-manager.svg)](https://npmjs.com/package/trade-opskins-manager)
-[![npm downloads](https://img.shields.io/npm/dm/opskins-tradeoffer-manager.svg)](http://npm-stat.com/charts.html?package=trade-opskins-manager)
-[![npm downloads](https://img.shields.io/npm/dt/opskins-tradeoffer-manager.svg)](http://npm-stat.com/charts.html?package=trade-opskins-manager)
-[![license](https://img.shields.io/npm/l/opskins-tradeoffer-manager.svg)](https://github.com/darkwar123/node-trade-opskins-manager/blob/master/LICENSE)
+[![npm version](https://img.shields.io/npm/v/opskins-tradeoffer-manager.svg)](https://npmjs.com/package/opskins-tradeoffer-manager)
+[![npm downloads](https://img.shields.io/npm/dm/opskins-tradeoffer-manager.svg)](http://npm-stat.com/charts.html?package=opskins-tradeoffer-manager)
+[![npm downloads](https://img.shields.io/npm/dt/opskins-tradeoffer-manager.svg)](http://npm-stat.com/charts.html?package=opskins-tradeoffer-manager)
+[![license](https://img.shields.io/npm/l/opskins-tradeoffer-manager.svg)](https://github.com/waylaidwanderer/opskins-tradeoffer-manager/blob/master/LICENSE)
 
 # Contributing
 
