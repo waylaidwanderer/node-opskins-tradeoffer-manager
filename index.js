@@ -173,10 +173,14 @@ class TradeOfferManager extends EventEmitter {
     }
 
     async sendOffer(offer) {
+        let endpoint = 'SendOfferToSteamId';
+        if (!offer.steam_id) {
+            endpoint = 'SendOffer';
+        }
         offer.twofactor_code = twoFactor.generateToken(this.twoFactorSecret).token;
         this.pendingOfferSendResponses++;
         try {
-            const data = await this.post('ITrade', 'SendOfferToSteamId', 1, offer);
+            const data = await this.post('ITrade', endpoint, 1, offer);
             const offerData = data.response.offer;
             if (!this.pollData.offers.find(oldOffer => oldOffer.id === offerData.id)) {
                 this.pollData.offers.unshift(offerData);
