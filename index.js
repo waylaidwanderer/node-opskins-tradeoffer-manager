@@ -16,8 +16,8 @@ class TradeOfferManager extends EventEmitter {
         const options = {
             pollInterval: 5000,
             pollDataMaxOffers: 1000,
-            pollData: { offers: [], offersSince: 0, },
-            ...opt
+            pollData: { offers: [], offersSince: 0 },
+            ...opt,
         };
 
         this.apiKey = options.apiKey;
