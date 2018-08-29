@@ -13,9 +13,20 @@ class TradeOfferManager extends EventEmitter {
     constructor(opt) {
         super();
 
-        this.apiKey = opt.apiKey;
-        this.twoFactorSecret = opt.twoFactorSecret;
-        this.pollInterval = opt.pollInterval || 5000;
+        const options = {
+            pollInterval: 5000,
+            pollDataMaxOffers: 1000,
+            pollData: { offers: [], offersSince: 0, },
+            ...opt
+        };
+
+        this.apiKey = options.apiKey;
+        this.pollData = options.pollData;
+        this.cancelTime = options.cancelTime;
+        this.pollInterval = options.pollInterval;
+        this.twoFactorSecret = options.twoFactorSecret;
+        this.pollDataMaxOffers = options.pollDataMaxOffers;
+
         this.request = request.defaults({
             auth: {
                 user: this.apiKey,
@@ -23,15 +34,10 @@ class TradeOfferManager extends EventEmitter {
                 sendImmediately: true,
             },
         });
-        this.pollData = opt.pollData || {
-            offers: [],
-            offersSince: 0,
-        };
-        this.pollDataMaxOffers = opt.pollDataMaxOffers || 1000;
-        this.cancelTime = opt.cancelTime;
 
         this.lastPoll = 0;
         this.pendingOfferSendResponses = 0;
+
         this.doPoll();
     }
 
